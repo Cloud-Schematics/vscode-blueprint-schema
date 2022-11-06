@@ -1,0 +1,147 @@
+name: "vpc-solution"
+# yaml-language-server: $schema=../blueprint_schema.json
+schema_version: "1.0.0"
+type: "blueprint"
+description: "Landing zone vpc solution"
+settings:
+  - name: TF_LOG
+    value: "DEBUG"
+inputs:
+  - name: region
+  - name: prefix
+  - name: name
+  - name: resource_group
+  - name: resource_tags
+  - name: machine_type
+  - name: image_id
+  - name: ssh_key_ids
+  - name: vsi_floating_ip
+  - name: vsi_per_subnet
+  - name: security_group_rules
+outputs:
+  - name: id
+    value: $module.slz_vpc.outputs.vpc_id
+    description: "VPC id"
+  - name: crn
+    value: $module.slz_vpc.outputs.vpc_crn
+    description: "VPC crn"
+modules:
+  - module_type: terraform
+    name: "slz_vpc"
+    source:
+      source_type: github
+      git:
+        git_repo_url: "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vpc/tree/main"
+    settings:
+      - name: TF_VERSION
+        value: 1.2
+    inputs:
+      - name: resource_group_id
+        value: $blueprint.resource_group
+        description: "An existing resource group name to use for this example"
+      - name: prefix
+        value: $blueprint.prefix
+        description: "The prefix that you would like to append to your resources"
+      - name: region
+        value: $blueprint.region
+        description: "The region to which to deploy the VPC"
+      - name: name
+        value: $blueprint.name
+        description: "The name the VPC will be created with"
+      - name: tags
+        value: $blueprint.resource_tags
+        description: "List of Tags for the resource created"
+        type: list(string)
+      - name: security_group_rules
+        value: $blueprint.security_group_rules
+        description: "A list of security group rules to be added to the default vpc security group"
+        type: |
+          list(
+            object({
+              name = string
+              direction = string
+              remote = string
+              tcp = optional(
+                object({
+                  port_max = number
+                  port_min = number
+                })
+              )
+              udp = optional(
+                object({
+                  port_max = number
+                  port_min = number
+                })
+              )
+              icmp = optional(
+                object({
+                  type = number
+                  code = number
+                })
+              )
+            })
+          )
+    outputs:
+      - name: subnet_zone_list
+      - name: vpc_id
+      - name: vpc_crn
+  - module_type: terraform
+    name: "slz_vsi"
+    source:
+      source_type: github
+      git:
+        git_repo_url: "https://github.com/terraform-ibm-modules/terraform-ibm-landing-zone-vsi/tree/main"
+    settings:
+      - name: TF_VERSION
+        value: 1.0
+    inputs:
+      - name: resource_group_id
+        value: $blueprint.resource_group
+        description: "An existing resource group name to use for this example"
+      - name: image_id
+        value: $blueprint.image_id
+        description: "Image ID used for VSI. Run 'ibmcloud is images' to find available images. Be aware that region is important for the image since the id's are different in each region."
+      - name: security_group
+        value: __NULL__
+      - name: create_security_group
+        value: false
+        description: "Create security group for VSI. If this is passed as false, the default will be used"
+      - name: tags
+        value: $blueprint.resource_tags
+        description: "List of Tags for the resource created"
+        type: list(string)
+      - name: subnets
+        value: $module.slz_vpc.outputs.subnet_zone_list
+        type: |
+          list(object({
+            name = string
+            id   = string
+            zone = string
+            cidr = string
+          }))
+      - name: vpc_id
+        value: $module.slz_vpc.outputs.vpc_id
+      - name: prefix
+        value: $blueprint.prefix
+        description: "The prefix that you would like to append to your resources"
+      - name: machine_type
+        value: $blueprint.machine_type
+        description: "VSI machine type"
+      - name: user_data
+        value: ""
+      - name: boot_volume_encryption_key
+        value: ""
+      - name: vsi_per_subnet
+        value: $blueprint.vsi_per_subnet
+        type: "number"
+        description: "Number of VSI instances for each subnet"
+      - name: ssh_key_ids
+        value: $blueprint.ssh_key_ids
+        type: "list(string)"
+        description: "One or more existing ssh key ids to use"
+      - name: enable_floating_ip
+        value: $blueprint.vsi_floating_ip
+        type: "bool"
+        description: "Add floating IP to VSIs"
+      - name: ibmcloud_api_key
+        value: ""

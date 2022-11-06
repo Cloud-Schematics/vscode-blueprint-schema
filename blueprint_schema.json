@@ -1,0 +1,512 @@
+{
+    "$schema": "https://json-schema.org/draft-04/schema",
+    "title": "Schematics_Blueprint_v1",
+    "id$": "Schematics_Blueprint_v1",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of blueprint template for identification purposes. \n Blueprint docs: https://cloud.ibm.com/docs/schematics?topic=schematics-blueprint-templates"
+        },
+        "schema_version": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            "description": "Version of blueprint template schema in SemVer format"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "blueprint"
+            ],
+            "description": "Identifier for the schema type. Set to 'blueprint'"
+        },
+        "description": {
+            "type": "string",
+            "description": "User description of the blueprint template"
+        },
+        "tags": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array",
+            "description": "Tags to be attached to provisioned resources. An array of comma separated strings"
+        },
+        "inputs": {
+            "items": {
+                "$ref": "#/$defs/Input"
+            },
+            "type": "array",
+            "description": "Template inputs that must be specified. \n https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-inputs"
+        },
+        "settings": {
+            "items": {
+                "$ref": "#/$defs/Setting"
+            },
+            "type": "array",
+            "description": "Settings to be applied to all modules in the template \n Spec: https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-settings"
+        },
+        "outputs": {
+            "items": {
+                "$ref": "#/$defs/Output"
+            },
+            "type": "array",
+            "description": "Outputs that will be returned by Blueprints. \n Spec:https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-outputs"
+        },
+        "modules": {
+            "items": {
+                "$ref": "#/$defs/Module"
+            },
+            "type": "array",
+            "description": "List of blueprint module definitions \n Using modules docs: https://cloud.ibm.com/docs/schematics?topic=schematics-blueprint-terraform \n Spec: https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-modules-schema"
+        }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "schema_version",
+        "description",
+        "inputs",
+        "modules"
+    ],
+    "$defs": {
+        "Source": {
+            "properties": {
+                "source_type": {
+                    "enum": [
+                        "github",
+                        "catalog",
+                        "gitlab"
+                    ],
+                    "description": "Source library, one of catalog, gitlab or github. Followed by 'git' or 'catalog' key fields. \n Follow with the git keyword for Git repos that require a git_url. \n Follow with catalog keyword to define catalog specification. "
+                },
+                "git": {
+                    "$ref": "#/$defs/Git",
+                    "description": "Git source definition. Mutually exclusive with the catalog definition."
+                },
+                "catalog": {
+                    "$ref": "#/$defs/Catalog",
+                    "description": "Catalog source definition. Mutually exclusive with the git definition."
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "source_type"
+            ]
+        },
+        "Catalog": {
+            "properties": {
+                "catalog_name": {
+                    "type": "string"
+                },
+                "offering_name": {
+                    "type": "string"
+                },
+                "offering_version": {
+                    "type": "string"
+                },
+                "offering_kind": {
+                    "type": "string"
+                },
+                "catalog_id": {
+                    "type": "string"
+                },
+                "offering_id": {
+                    "type": "string"
+                },
+                "offering_version_id": {
+                    "type": "string"
+                },
+                "offering_repo_url": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "catalog_name"
+            ]
+        },
+        "ModuleInput": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of variable to be passed to terraform. Must match a variable name in the modules' Terraform config"
+                },
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ],
+                    "pattern": "^((\\$(((module)\\.[A-Za-z\\d_-]+\\.(outputs))|(blueprint))\\.[A-Za-z\\d_-]+$)|([^\\$].*)|(^$))",
+                    "description": "Input value, sourced from the template inputs as $blueprint.<input_name>, another module as $module.<module_name>.outputs.<output_name>, or a specified value in HCL format."
+                },
+                "type": {
+                    "type": "string",
+                    "pattern": "^(string)|(number)|(bool)|(list)|(map)",
+                    "description": "Any valid HCL type, as a single or multi-line string. YAML multi-line entry supported using literal (pipe) or folded (>) formatting "
+                },
+                "description": {
+                    "type": "string"
+                },
+                "sensitive": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "ModuleOutput": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Named output of Terraform module"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name"
+            ]
+        },
+        "ModuleSetting": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "Git": {
+            "properties": {
+                "git_repo_url": {
+                    "type": "string",
+                    "pattern": "(\\w+://)(.+@)*([\\w\\d\\.]+)/*(.*)",
+                    "description": "URL of the Git repo containing the Terraform module"
+                },
+                "git_token": {
+                    "type": "string"
+                },
+                "git_release": {
+                    "type": "string",
+                    "description": "Release in SemVer format. Mutually exclusive with git_branch. Omit to get latest release",
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                },
+                "git_branch": {
+                    "type": "string",
+                    "description": "Git branch for module source. Mutually exclusive with git_release. Omit to get latest release"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "git_repo_url"
+            ],
+            "anyOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": [
+                                "git_release"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "git_branch"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "not": {
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "git_release"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "git_branch"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Input": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Input to the template. Specify the value keyword to define a constant to be used as the input. Omit the value keyword to source the value from the user inputs"
+                },
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "If specified, contains a value to define a constant to be used as the input. Omit the value keyword to source from user inputs",
+                    "pattern": "([^\\$].*)"
+                },
+                "type": {
+                    "type": "string",
+                    "pattern": "^(string)|(number)|(bool)|(list)|(map)|(null)",
+                    "description": "Any valid HCL type, as a single or multi-line string. YAML multi-line entry is supported using literal (pipe) or folded (>) formatting "
+                },
+                "description": {
+                    "type": "string"
+                },
+                "sensitive": {
+                    "type": "boolean",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "description": "Sensitive input value that should be masked in any output."
+                },
+                "immutable": {
+                    "type": "boolean"
+                },
+                "hidden": {
+                    "type": "boolean"
+                },
+                "default": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name"
+            ]
+        },
+        "Module": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Identifier for module used within the template to create references. "
+                },
+                "module_type": {
+                    "type": "string",
+                    "enum": [
+                        "terraform"
+                    ],
+                    "description": "Type of automation code. Only terraform is supported at present"
+                },
+                "source": {
+                    "$ref": "#/$defs/Source",
+                    "description": "Source repository definition for automation module. Followed by 'source_type'"
+                },
+                "tags": {
+                    "type": "string",
+                    "description": "User tags to be applied to resources provisioned by the module"
+                },
+                "injectors": {
+                    "items": {
+                        "$ref": "#/$defs/Injector"
+                    },
+                    "type": "array",
+                    "description": "Inject Terraform provider definition for non-root modules \n Spec: https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-modules-injector \n Docs: https://cloud.ibm.com/docs/schematics?topic=schematics-blueprint-terraform#bp-provider-injection"
+                },
+                "inputs": {
+                    "items": {
+                        "$ref": "#/$defs/ModuleInput"
+                    },
+                    "type": "array",
+                    "description": "List of inputs to be passed to the Terraform module, as name/value pairs"
+                },
+                "settings": {
+                    "items": {
+                        "$ref": "#/$defs/ModuleSetting"
+                    },
+                    "type": "array",
+                    "description": "List of settings to be applied to this module, e.g TF_VERSION. See documentation for a list of supported options"
+                },
+                "outputs": {
+                    "items": {
+                        "$ref": "#/$defs/ModuleOutput"
+                    },
+                    "type": "array",
+                    "description": "Named outputs returned by the Terraform module"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "module_type",
+                "name",
+                "source",
+                "inputs"
+            ]
+        },
+        "Output": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of output to return"
+                },
+                "value": {
+                    "type": "string",
+                    "pattern": "^(\\$module)\\.[A-za-z0-9]*\\.(outputs)\\.[A-za-z0-9]*.$",
+                    "description": "Reference to the named output of a module in the format \n \"$module.<module_name>.outputs.<output_name>\""
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "Setting": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "See documentation for a list of supported settings"
+                },
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "Injector": {
+            "properties": {
+                "tft_git_url": {
+                    "type": "string",
+                    "pattern": "(\\w+://)(.+@)*([\\w\\d\\.]+)/*(.*)",
+                    "description": "Git repo containing injection template files. \n Normally https://github.com/Cloud-Schematics/tf-templates"
+                },
+                "tft_git_token": {
+                    "type": "string"
+                },
+                "tft_prefix": {
+                    "type": "string"
+                },
+                "injection_type": {
+                    "type": "string",
+                    "enum": [
+                        "override",
+                        "inject"
+                    ],
+                    "description": "Injector type, one of inject or override"
+                },
+                "tft_name": {
+                    "type": "string",
+                    "enum": [
+                        "ibm",
+                        "kubernetes"
+                    ],
+                    "description": "Injector template name, one of ibm or kubernetes"
+                },
+                "tft_parameters": {
+                    "items": {
+                        "$ref": "#/$defs/TFTParameter"
+                    },
+                    "type": "array",
+                    "description": "Input parameters to configure the injector template. See template repo for details"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "tft_git_url",
+                "injection_type",
+                "tft_name",
+                "tft_parameters"
+            ]
+        },
+        "TFTParameter": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name value pair. Only static values allowed, defined as strings"
+                },
+                "value": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "description": "Only static values allowed, defined as a string"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ]
+        }
+    }
+}

@@ -1,0 +1,24 @@
+name: "blueprints-complex-inputs"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/stevestrutt/blueprint-json-schema/master/schema.json
+type: "blueprint"
+schema_version: "1.0.0"
+description: "test"
+inputs:
+  - name: "new"
+    value: "new"
+settings:
+  - name: TF_VERSION
+    value: 1.0
+outputs:
+  - name: "q"
+    value: $module
+modules:
+  - name: "temp"
+    module_type: "terraform"
+    source:
+    inputs:
+      - name: "value"
+        value: "vvvv"
+  - name: "new"
+    value: null
+
