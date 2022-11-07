@@ -31,12 +31,12 @@ Click on Install to install the extension into your workspace.
 The blueprint JSON schema must be identified to VSCode. It is not automatically recognised. The association of the blueprint schema can be done either in the blueprint YAML file itself using a modeline or in the VSCode User or Workspace settings under the property `yaml.schemas`.
 
 ### Associating the schema in the blueprint YAML file
-It is possible to specify the blueprint schema using a modeline in the blueprint YAML file. The blueprint schema url can be a relative path to a local file or the url of the schema in the Cloud-Schematics Github [repo](https://github.com/stevestrutt/blueprint-json-schema).  
+It is possible to specify the blueprint schema using a modeline in the blueprint YAML file. The blueprint schema url can be a relative path to a local file or the url of the schema in the Cloud-Schematics Github [repo](https://github.com/Cloud-Schematics/vscode-blueprint-schema).  
 
 Cut and paste the following text into the blueprint YAML file, within the first few lines of the file. 
 
 ```
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-json-schema/master/blueprint_schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
 ```
 
 ### Associating the blueprint schema via user and workspace settings
@@ -46,7 +46,7 @@ Open [user and workspace settings](https://code.visualstudio.com/docs/getstarted
 
 ```
 yaml.schemas: {
-    "https://raw.githubusercontent.com/Cloud-Schematics/blueprint-json-schema/master/vscode_blueprint_schema.json": "/*_blueprint.yaml"
+    "https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json": "/*_blueprint.yaml"
 }
 ```
 

@@ -1,5 +1,5 @@
 name: "blueprints-complex-inputs"
-# yaml-language-server: $schema=https://raw.githubusercontent.com/stevestrutt/blueprint-json-schema/master/schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
 type: "blueprint"
 schema_version: "1.0.0"
 description: "test"
@@ -11,7 +11,7 @@ settings:
     value: 1.0
 outputs:
   - name: "q"
-    value: $module
+    value: $module.ffff.outputs.fff
 modules:
   - name: "temp"
     module_type: "terraform"
@@ -19,6 +19,3 @@ modules:
     inputs:
       - name: "value"
         value: "vvvv"
-  - name: "new"
-    value: null
-

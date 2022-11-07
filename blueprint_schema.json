@@ -396,7 +396,7 @@
                 },
                 "value": {
                     "type": "string",
-                    "pattern": "^(\\$module)\\.[A-za-z0-9]*\\.(outputs)\\.[A-za-z0-9]*.$",
+                    "pattern": "^(\\$module)\\.[A-Za-z\\d_-]+\\.(outputs)\\.[A-Za-z\\d_-]+.$",
                     "description": "Reference to the named output of a module in the format \n \"$module.<module_name>.outputs.<output_name>\""
                 },
                 "description": {
