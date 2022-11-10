@@ -320,6 +320,12 @@
                     "type": "boolean"
                 },
                 "default": {
+                    "type": "string"
+                },
+                "optional": {
+                    "type": "boolean"
+                },
+                "required": {
                     "type": "boolean"
                 }
             },
