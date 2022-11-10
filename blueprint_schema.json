@@ -143,6 +143,15 @@
                         },
                         {
                             "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
                         }
                     ],
                     "pattern": "^((\\$(((module)\\.[A-Za-z\\d_-]+\\.(outputs))|(blueprint))\\.[A-Za-z\\d_-]+$)|([^\\$].*)|(^$))",
@@ -198,6 +207,12 @@
                         },
                         {
                             "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
                         },
                         {
                             "type": "null"
@@ -291,6 +306,12 @@
                             "type": "boolean"
                         },
                         {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
+                        },
+                        {
                             "type": "null"
                         }
                     ],
@@ -319,8 +340,25 @@
                 "hidden": {
                     "type": "boolean"
                 },
-                "default": {
-                    "type": "string"
+                "max_length": {
+                    "type": "number",
+                    "description": "Maximum character length, validated by the UI."
+                },
+                "min_length": {
+                    "type": "number",
+                    "description": "Minimum character length, validated by the UI."
+                },
+                "options": {
+                    "type": "array",
+                    "description": "Options supported when populated via the UI. Presented in array format [option1, option2]"
+                },
+                "required": {
+                    "type": "boolean",
+                    "enum": [
+                        true,
+                        false
+                    ],
+                    "description": "Indicates that the value is required."
                 },
                 "optional": {
                     "type": "boolean",
@@ -330,13 +368,27 @@
                     ],
                     "description": "Indicates that the value is optional."
                 },
-                "required": {
-                    "type": "boolean",
-                    "enum": [
-                        true,
-                        false
-                    ],
-                    "description": "Indicates that the value is required."
+                "default": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 }
             },
             "additionalProperties": false,
@@ -446,6 +498,12 @@
                         },
                         {
                             "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
                         },
                         {
                             "type": "null"
