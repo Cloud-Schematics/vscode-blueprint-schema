@@ -1,0 +1,95 @@
+name: "Blueprint_Basic_Example"
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+schema_version: "1.0.0"
+description: "Simple two module blueprint. Deploys Resource Group and COS bucket"
+type: "blueprint"
+inputs:
+  - name: resource_group_name
+    description: Name of the resource group
+    type: string
+    required: true
+    sensitive: false
+    max_length: 128
+  - name: provision_rg
+    default: false
+    description: Provision a new resource group? true/false
+    optional: true
+    type: boolean
+    required: true
+  - name: cos_instance_name
+    description: COS Instance name
+    type: string
+    required: true
+    sensitive: false
+    max_length: 32
+  - name: cos_storage_plan
+    default: lite
+    type: string
+    description: COS Service plan (lite / standard)
+    required: true
+    sensitive: false
+    options: ["lite", "standard"]
+    max_length: 32
+  - name: rg_git_token
+    type: string
+    sensitive: true
+  - name: cos_git_token
+    type: string
+    sensitive: true
+outputs:
+  - name: cos_id
+    value: $module.basic-cos-storage.outputs.cos_id
+settings:
+  - name: TF_VERSION
+    value: 1.0
+modules:
+  - name: basic-resource-group
+    module_type: terraform
+    source:
+      source_type: github
+      git:
+        git_repo_url: "https://github.com/Cloud-Schematics/blueprint-example-modules-private/tree/main/IBM-ResourceGroup"
+        git_branch: main
+        git_token: $blueprint.rg_git_token
+    inputs:
+      - name: provision
+        value: $blueprint.provision_rg
+      - name: name
+        value: $blueprint.resource_group_name
+    outputs:
+      - name: resource_group_name
+      - name: resource_group_id
+  - name: basic-cos-storage
+    layer: DB
+    module_type: terraform
+    source:
+      source_type: github
+      git:
+        git_repo_url: "https://github.com/nven/blueprint-example-modules-private/tree/main/IBM-Storage"
+        git_branch: main
+        git_token: $blueprint.cos_git_token
+    inputs:
+      - name: cos_instance_name
+        value: $blueprint.cos_instance_name
+        type: string
+      - name: cos_storage_plan
+        value: $blueprint.cos_storage_plan
+        type: string
+      - name: cos_single_site_loc
+        value: "ams03"
+        type: string
+      - name: resource_group_id
+        value: $module.basic-resource-group.outputs.resource_group_id
+        type: string
+    injectors:
+      - tft_git_url: "https://github.com/Cloud-Schematics/tf-templates"
+        tft_name: "ibm"
+        injection_type: override
+        tft_parameters:
+          - name: provider_version
+            value: 1.38.2
+          - name: provider_source
+            value: IBM-Cloud/ibm
+    outputs:
+      - name: cos_id
+      - name: cos_crn

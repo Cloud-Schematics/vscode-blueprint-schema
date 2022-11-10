@@ -788,7 +788,7 @@ modules:
         git_repo_url: "https://github.com/terraform-ibm-modules/terraform-ibm-powervs-infrastructure/tree/main/examples/ibm-catalog/standard-solution"
     inputs:
       - name: prerequisite_workspace_id
-        value: $module.secure-infrastructure.schematics_workspace_id
+        value: $module.secure-infrastructure.outputs.schematics_workspace_id
         type: string
       - name: ssh_private_key
         value: $blueprint.ssh_private_key
@@ -804,5 +804,5 @@ modules:
         git_repo_url: "https://github.com/terraform-ibm-modules/terraform-ibm-powervs-sap/tree/main/examples/ibm-catalog/prepared-system-solution"
     inputs:
       - name: prerequisite_workspace_id
-        value: $module.power-infrastructure.powervs_workspace_name_id
+        value: $module.power-infrastructure.outputs.powervs_workspace_name_id
         type: string
