@@ -1,5 +1,4 @@
 name: "Blueprint_Basic_Example"
-# yaml-language-server: $schema=../blueprint_schema.json
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
 schema_version: "1.0.0"
 description: "Simple two module blueprint. Deploys Resource Group and COS bucket"

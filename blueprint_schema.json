@@ -154,7 +154,7 @@
                             "type": "null"
                         }
                     ],
-                    "pattern": "^((\\$(((module)\\.[A-Za-z\\d_-]+\\.(outputs))|(blueprint))\\.[A-Za-z\\d_-]+$)|([^\\$].*)|(^$))",
+                    "pattern": "^((\\$(((module)\\.[A-Za-z\\d_-<>]+\\.(outputs))|(blueprint))\\.[A-Za-z\\d_-<>]+$)|([^\\$].*)|(^$))",
                     "description": "Input value, sourced from the template inputs as $blueprint.<input_name>, another module as $module.<module_name>.outputs.<output_name>, or a specified value in HCL format."
                 },
                 "type": {
@@ -468,7 +468,7 @@
                 },
                 "value": {
                     "type": "string",
-                    "pattern": "^(\\$module)\\.[A-Za-z\\d_-]+\\.(outputs)\\.[A-Za-z\\d_-]+.$",
+                    "pattern": "^(\\$module)\\.[A-Za-z\\d_-<>]+\\.(outputs)\\.[A-Za-z\\d_-<>]+.$",
                     "description": "Reference to the named output of a module in the format \n \"$module.<module_name>.outputs.<output_name>\""
                 },
                 "description": {

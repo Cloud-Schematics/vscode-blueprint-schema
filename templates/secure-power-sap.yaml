@@ -1,5 +1,5 @@
 name: "SAP on secure Power Virtual Servers"
-# yaml-language-server: $schema=../blueprint_schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
 schema_version: "1.0.0"
 description: "Solution to deploy SAP on secure Power Virtual Servers"
 type: "blueprint"
