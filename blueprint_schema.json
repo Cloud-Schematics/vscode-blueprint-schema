@@ -154,12 +154,12 @@
                             "type": "null"
                         }
                     ],
-                    "pattern": "^((\\$(((module)\\.[A-Za-z\\d_-<>]+\\.(outputs))|(blueprint))\\.[A-Za-z\\d_-<>]+$)|([^\\$].*)|(^$))",
+                    "pattern": "^([$]((module\\.)[A-Za-z\\d_\\-<>]+(\\.outputs\\.)[A-Za-z\\d_\\-<>]+|(blueprint\\.).[A-Za-z\\d_\\-<>]+)|([^\\$]))",
                     "description": "Input value, sourced from the template inputs as $blueprint.<input_name>, another module as $module.<module_name>.outputs.<output_name>, or a specified value in HCL format."
                 },
                 "type": {
                     "type": "string",
-                    "pattern": "^(string)|(number)|(bool)|(list)|(map)",
+                    "pattern": "^(string)|(number)|(bool)|(list)|(map)|(object)",
                     "description": "Any valid HCL type, as a single or multi-line string. YAML multi-line entry supported using literal (pipe) or folded (>) formatting "
                 },
                 "description": {
@@ -316,11 +316,11 @@
                         }
                     ],
                     "description": "If specified, contains a value to define a constant to be used as the input. Omit the value keyword to source from user inputs",
-                    "pattern": "([^\\$].*)"
+                    "pattern": "([^\\$])"
                 },
                 "type": {
                     "type": "string",
-                    "pattern": "^(string)|(number)|(bool)|(list)|(map)|(null)",
+                    "pattern": "([^\\$].*)",
                     "description": "Any valid HCL type, as a single or multi-line string. YAML multi-line entry is supported using literal (pipe) or folded (>) formatting "
                 },
                 "description": {

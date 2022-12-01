@@ -51,7 +51,7 @@ Alternatively the schema can be automatically applied using file matching define
 Open [user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings#_creating-user-and-workspace-settings) and navigate to the extensions `yaml.schemas` section. Cut and paste the following value onto the section. The schema will be associated with all blueprint template files that end with the file pattern '*blueprint.yaml'
 
 ```
-yaml.schemas: {
+"yaml.schemas": {
     "https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json": "/*blueprint.yaml"
 }
 ```

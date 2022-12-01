@@ -1,0 +1,17 @@
+name: blueprint
+# yaml-language-server: $schema=../blueprint_schema.json
+type: blueprint
+schema_version: "1.0.0"
+description: none
+inputs:
+  - name: new
+    value: gggg
+    type: https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+    default: not
+modules:
+  - name: 
+    module_type: 
+    source:
+      
+    inputs:
+      - name: 
