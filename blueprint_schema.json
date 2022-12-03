@@ -122,10 +122,7 @@
                 }
             },
             "additionalProperties": false,
-            "type": "object",
-            "required": [
-                "catalog_name"
-            ]
+            "type": "object"
         },
         "ModuleInput": {
             "properties": {
