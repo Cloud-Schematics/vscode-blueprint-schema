@@ -9,7 +9,7 @@
         },
         "schema_version": {
             "type": "string",
-            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            "pattern": "^(0|[1-9]\\d*)[\\.](0|[1-9]\\d*)[\\.](0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[\\.](?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:[\\.][0-9a-zA-Z-]+)*))?$",
             "description": "Version of blueprint template schema in SemVer format"
         },
         "type": {
@@ -42,7 +42,7 @@
                 "$ref": "#/$defs/Setting"
             },
             "type": "array",
-            "description": "Settings to be applied to all modules in the template \n Spec: https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-settings"
+            "description": "Environment Variables to be applied to all modules in the template \n Spec: https://cloud.ibm.com/docs/schematics?topic=schematics-bp-template-schema-yaml#bp-settings"
         },
         "outputs": {
             "items": {
@@ -108,10 +108,12 @@
                     "type": "string"
                 },
                 "catalog_id": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
                 },
                 "offering_id": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
                 },
                 "offering_version_id": {
                     "type": "string"
@@ -127,6 +129,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Name of variable to be passed to terraform. Must match a variable name in the modules' Terraform config"
                 },
                 "value": {
@@ -150,7 +153,7 @@
                             "type": "null"
                         }
                     ],
-                    "pattern": "^([$]((module\\.)[A-Za-z\\d_\\-<>]+(\\.outputs\\.)[A-Za-z\\d_\\-<>]+|(blueprint\\.).[A-Za-z\\d_\\-<>]+)|([^\\$]))",
+                    "pattern": "^([$]((module[\\.])[A-Za-z\\d_\\-<>]+([\\.]outputs[\\.])[A-Za-z\\d_\\-<>]+$|(blueprint[\\.]).[A-Za-z\\d_\\-<>]+$)|([^\\$]))",
                     "description": "Input value, sourced from the template inputs as $blueprint.<input_name>, another module as $module.<module_name>.outputs.<output_name>, or a specified value in HCL format."
                 },
                 "type": {
@@ -176,6 +179,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Named output of Terraform module"
                 },
                 "description": {
@@ -191,7 +195,8 @@
         "ModuleSetting": {
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
                 },
                 "value": {
                     "oneOf": [
@@ -239,7 +244,7 @@
                 "git_release": {
                     "type": "string",
                     "description": "Release in SemVer format. Mutually exclusive with git_branch. Omit to get latest release",
-                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+                    "pattern": "^(0|[1-9]\\d*)[\\.](0|[1-9]\\d*)[\\.](0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:[\\.](?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:[\\.][0-9a-zA-Z-]+)*))?$"
                 },
                 "git_branch": {
                     "type": "string",
@@ -288,6 +293,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Input to the template. Specify the value keyword to define a constant to be used as the input. Omit the value keyword to source the value from the user inputs"
                 },
                 "value": {
@@ -397,6 +403,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Identifier for module used within the template to create references. "
                 },
                 "module_type": {
@@ -437,7 +444,7 @@
                         "$ref": "#/$defs/ModuleSetting"
                     },
                     "type": "array",
-                    "description": "List of settings to be applied to this module, e.g TF_VERSION. See documentation for a list of supported options"
+                    "description": "List of Environment Variables to be applied to this module, e.g TF_VERSION. See documentation for a list of supported options"
                 },
                 "outputs": {
                     "items": {
@@ -460,11 +467,12 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Name of output to return"
                 },
                 "value": {
                     "type": "string",
-                    "pattern": "^(\\$module)\\.[A-Za-z\\d_-<>]+\\.(outputs)\\.[A-Za-z\\d_-<>]+.$",
+                    "pattern": "^([$]module[\\.][A-Za-z\\d_\\-<>]+([\\.]outputs[\\.])[A-Za-z\\d_\\-<>]+$)",
                     "description": "Reference to the named output of a module in the format \n \"$module.<module_name>.outputs.<output_name>\""
                 },
                 "description": {
@@ -482,6 +490,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "See documentation for a list of supported settings"
                 },
                 "value": {
@@ -518,14 +527,15 @@
             "properties": {
                 "tft_git_url": {
                     "type": "string",
-                    "pattern": "(\\w+://)(.+@)*([\\w\\d\\.]+)/*(.*)",
+                    "pattern": "^https?:\/\/[-a-zA-Z0-9]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([a-zA-Z0-9-\/]*)$",
                     "description": "Git repo containing injection template files. \n Normally https://github.com/Cloud-Schematics/tf-templates"
                 },
                 "tft_git_token": {
                     "type": "string"
                 },
                 "tft_prefix": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
                 },
                 "injection_type": {
                     "type": "string",
@@ -564,6 +574,7 @@
             "properties": {
                 "name": {
                     "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$",
                     "description": "Name value pair. Only static values allowed, defined as strings"
                 },
                 "value": {

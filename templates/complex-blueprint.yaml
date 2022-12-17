@@ -1,0 +1,66 @@
+name: blueprints-complex-inputs
+# yaml-language-server: $schema=/Users/stevestrutt/Documents/github/schematics-solution/vscode-blueprint-schema/blueprint_schema.json
+## yaml-language-server: $schema=../blueprint_schema.json
+type: blueprint
+schema_version: "1.0.0"
+description: "Sample blueprint to demonstrate passing of complex Terraform variables"
+inputs:
+  - name: resource_group
+    value: "24"
+       - name
+  - name: region
+  - name: sample_var
+  - name: boolean_var
+  - name: list_any_flow_scalar
+  - name: list_any_block_scalar
+  - name: docker_ports
+
+outputs:
+  - name: blueprint-output
+    value: $module.terraform_module2.outputs.nested_complex
+settings:
+  - name: TF_VERSION
+    value: 1.0
+modules:
+  - name: terraform_module1
+    module_type: terraform
+    source:
+      source_type: github
+      git:
+        git_repo_url: "https://github.com/Cloud-Schematics/blueprint-example-modules/tree/main/tf-inputs-outputs"
+        git_branch: "main"
+    inputs:
+      # default string
+      - resource_group 
+        value: $blueprint.resource_group
+      - name: region 
+        value: $blueprint.region
+      - name: TF_VERSION
+        value: 1.0
+      - name: sample_var
+        value: $blueprint.sample_var
+        # default string
+
+      - name: image_id
+        value: ami-image
+        # HCL type: list(any) passed as flow scalar double-quoted
+      - name: list_any_flow_scalar
+        value: $blueprint.list_any_flow_scalar
+        type: list(any)
+
+        # HCL type: list(any) passed as block scalar double-quoted
+      - name: list_any_block_scalar
+        value: $blueprint.list_any_block_scalar
+        type: list(any)
+
+      - name: docker_ports
+        value: $blueprint.docker_ports
+        type: |
+          list(object({
+            internal = number
+            external = number
+            protocol = string
+          })
+    outputs:
+      - name: nested_complex
+      - name: test_tuple

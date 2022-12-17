@@ -1,11 +1,12 @@
 name: blueprints-complex-inputs
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+## yaml-language-server: $schema=../blueprint_schema.json
 type: blueprint
-schema_version: "1.0.0"
+schema_version: "1.0.2"
 description: "Sample blueprint to demonstrate passing of complex Terraform variables"
 inputs:
   - name: resource_group
-    value: "24"
+    value: $module.terraform_module2.outputs.nested_complex
   - name: region
   - name: sample_var
   - name: boolean_var
@@ -14,8 +15,8 @@ inputs:
   - name: docker_ports
 outputs:
   - name: blueprint-output
-    value: $module.terraform_module2.outputs.nested_complex
-settings:
+    value: $module.hhhhhh.outputs.gggk   
+settings:     
   - name: TF_VERSION
     value: 1.0
 tags: ["one"]
@@ -23,7 +24,7 @@ modules:
   - name: terraform_module1
     module_type: terraform
     source:
-      source_type: github
+      source_type: git
       git:
         git_repo_url: "https://github.com/Cloud-Schematics/blueprint-example-modules/tree/main/tf-inputs-outputs"
         git_branch: "main"

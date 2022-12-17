@@ -1,8 +1,7 @@
 
 name: "Ready Image on secure Power Virtual Servers"
-## yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
-# yaml-language-server: $schema=/Users/stevestrutt/Documents/github/schematics-solution/vscode-blueprint-schema/blueprint_schema.json
-
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+## yaml-language-server: $schema=../blueprint_schema.json
 schema_version: "1.0.0"
 description: "Solution to deploy Ready Image on secure Power Virtual Servers"
 # Invalid module type
@@ -23,10 +22,11 @@ inputs:
         "use_data": false,
         "wait_till": "IngressReady"
       }
-  - name: prefix
+  - name: pre fix
     # Type not validated 
     type: bad_string
-    optional: true
+    optional: truep
+  - res
   - name: ibmcloud_api_key
     type: string
     sensitive: true
@@ -47,8 +47,11 @@ inputs:
         name = "mgmt_net"
         cidr = "10.51.0.0/24"
       }
+outputs:
+  - name: cos_id
+    value: $module.$basic-cos-storage.outputs.cos_id
 modules:
-  - name: secure-infrastructure
+  - name: secure-infrastructu re
     module_type: terraform
     source:
       source_type: ibm_cloud_catalog
@@ -57,7 +60,7 @@ modules:
         offering_name: "Secure infrastructure on VPC for regulated industries"
         offering_version: "v1.10.3"
     inputs:
-      - name: ibmcloud_api_key
+      - name: ibmcloud_apikey
         # Error with incorrect $token
         value: $flueprint.ibmcloud_api_key
       - name: override_json_string
@@ -69,6 +72,7 @@ modules:
       - name: TF_VERSION
         # No numeric validation
         value: hdfhsH
+        
   - name: powervs-infrastructure
     layer: infrastructure
     # Error on module type
@@ -77,12 +81,12 @@ modules:
       # Error with invalid cataloh value
       source_type: ibm_cloud_catalog
       catalog:
-        catalog_id: "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc"
+        catalog_id: "1082e7d2-5e2f-0a11-a3bc-f88a8 e1931fc"
         offering_name: "Power infrastructure for regulated industries"
         offering_version: "v5.2.0"
     inputs:
       - name: ssh_private_key
-        value: $module.secure-infrastructure.outputs.schematics_workspace_id
+        value: $module.secure-infrastructure.outputs.schematics_workspace_i d
         type: string
       - name: prerequisite_workspace_id
         value: $module.secure-infrastructure.schematics_workspace_id
@@ -128,3 +132,12 @@ modules:
     inputs:
       - name: network
         value: one
+    injectors:
+      - tft_git_url: "https://githu"
+        tft_name: "ibm"
+        injection_type: overr ide
+        tft_parameters:
+          - name: provider_version
+            value: 1.38.2
+          - name: provider_source
+            value: IBM-Cloud/ibm
