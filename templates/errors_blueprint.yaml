@@ -25,7 +25,9 @@ inputs:
   - name: pre fix
     # Type not validated 
     type: bad_string
+    # unsupported value
     optional: truep
+
   - res
   - name: ibmcloud_api_key
     type: string
@@ -54,9 +56,11 @@ modules:
   - name: secure-infrastructu re
     module_type: terraform
     source:
+      # Invalid source type
       source_type: ibm_cloud_catalog
       catalog:
-        catalog_id: "5aeec28a-8658-4f07-9cf6-2a27400c4696"
+        # Space in string
+        catalog_id: "5aeec28a-8658-4f07-9cf6-2a27 400c4696"
         offering_name: "Secure infrastructure on VPC for regulated industries"
         offering_version: "v1.10.3"
     inputs:
@@ -81,14 +85,17 @@ modules:
       # Error with invalid cataloh value
       source_type: ibm_cloud_catalog
       catalog:
+        # space in string
         catalog_id: "1082e7d2-5e2f-0a11-a3bc-f88a8 e1931fc"
         offering_name: "Power infrastructure for regulated industries"
         offering_version: "v5.2.0"
     inputs:
       - name: ssh_private_key
+        # space in string
         value: $module.secure-infrastructure.outputs.schematics_workspace_i d
         type: string
       - name: prerequisite_workspace_id
+        # missing outputs token
         value: $module.secure-infrastructure.schematics_workspace_id
         type: string
 
@@ -116,7 +123,7 @@ modules:
         value: $module.powervs-infrastructure.powervs_workspace_name_id
         type: string
       - name: powervs_zone
-        # Error on values
+        # Invalid keyword 
         values: $blueprint.powervs_zone
         type: string
 
@@ -133,8 +140,10 @@ modules:
       - name: network
         value: one
     injectors:
+      # bad url 
       - tft_git_url: "https://githu"
         tft_name: "ibm"
+        # space in string
         injection_type: overr ide
         tft_parameters:
           - name: provider_version
