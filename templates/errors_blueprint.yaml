@@ -1,11 +1,12 @@
 
 name: "Ready Image on secure Power Virtual Servers"
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
-## yaml-language-server: $schema=../blueprint_schema.json
+## yaml-language-server: $schema=https://raw.githubusercontent.com/Cloud-Schematics/vscode-blueprint-schema/master/blueprint_schema.json
+# yaml-language-server: $schema=../blueprint_schema.json
 schema_version: "1.0.0"
 description: "Solution to deploy Ready Image on secure Power Virtual Servers"
 # Invalid module type
 type: "blueprint1"
+tags: ["one",gjd;g]
 inputs:
   - name: override_json_string
     description: Over rides default values with custom json
@@ -23,7 +24,7 @@ inputs:
         "wait_till": "IngressReady"
       }
   - name: pre fix
-    # Type not validated 
+    # Type is not validated at this time 
     type: bad_string
     # unsupported value
     optional: truep
@@ -36,6 +37,11 @@ inputs:
     required: true
     # Bad key
     option: false
+    # value and default are mutually exclusive. Defect in YAML extension waiting for 1.10.2
+  - name: duplicate
+    type: string
+    value: "anyvalue"
+    default: "anyvaluetoo"
   - name: powervs_management_network
     description: Name of the IBM Cloud PowerVS management subnet and CIDR to create.
     optional: true
@@ -51,18 +57,18 @@ inputs:
       }
 outputs:
   - name: cos_id
+    # Invalid use of $ character in second section
     value: $module.$basic-cos-storage.outputs.cos_id
 modules:
   - name: secure-infrastructu re
-    module_type: terraform
+    module_type: terrafgorm
     source:
-      # Invalid source type
-      source_type: ibm_cloud_catalog
-      catalog:
-        # Space in string
-        catalog_id: "5aeec28a-8658-4f07-9cf6-2a27 400c4696"
-        offering_name: "Secure infrastructure on VPC for regulated industries"
-        offering_version: "v1.10.3"
+      source_type: gitf
+      git:
+        # Error due to both branch and release
+        git_repo_url: "https://github.com/terraform-ibm-modules/terraform-ibm-powervs-infrastructure"
+        git_branch: main
+        git_release: 1.2.3
     inputs:
       - name: ibmcloud_apikey
         # Error with incorrect $token
@@ -82,7 +88,7 @@ modules:
     # Error on module type
     module_type: helm
     source:
-      # Error with invalid cataloh value
+      # Error with invalid catalog value
       source_type: ibm_cloud_catalog
       catalog:
         # space in string

@@ -28,7 +28,7 @@
                 "type": "string"
             },
             "type": "array",
-            "description": "Tags to be attached to provisioned resources. An array of comma separated strings"
+            "description": "User tags to be attached to provisioned resources. An array of comma separated strings"
         },
         "inputs": {
             "items": {
@@ -77,7 +77,7 @@
                         "git",
                         "catalog"
                     ],
-                    "description": "Source library, one of catalog, gitlab or github. Followed by 'git' or 'catalog' key fields. \n Follow with the git keyword for Git repos that require a git_url. \n Follow with catalog keyword to define catalog specification. "
+                    "description": "Source library, one of catalog or git. Followed by 'git' or 'catalog' key fields. \n Follow with the git keyword for Git repos that require a git_url. \n Follow with catalog keyword to define catalog specification. "
                 },
                 "git": {
                     "$ref": "#/$defs/Git",
@@ -258,34 +258,10 @@
             ],
             "anyOf": [
                 {
-                    "oneOf": [
-                        {
-                            "required": [
-                                "git_release"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "git_branch"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "not": {
-                        "anyOf": [
-                            {
-                                "required": [
-                                    "git_release"
-                                ]
-                            },
-                            {
-                                "required": [
-                                    "git_branch"
-                                ]
-                            }
-                        ]
-                    }
+                  "not": {
+                    "type": "object",
+                    "required": ["git_release","git_branch"]
+                  }   
                 }
             ]
         },
@@ -294,7 +270,7 @@
                 "name": {
                     "type": "string",
                     "pattern": "^[a-zA-Z0-9_\\-]*$",
-                    "description": "Input to the template. Specify the value keyword to define a constant to be used as the input. Omit the value keyword to source the value from the user inputs"
+                    "description": "Input to the template."
                 },
                 "value": {
                     "oneOf": [
@@ -317,7 +293,7 @@
                             "type": "null"
                         }
                     ],
-                    "description": "If specified, contains a value to define a constant to be used as the input. Omit the value keyword to source from user inputs",
+                    "description": "If specified, contains a value to define a constant to be used as the input. Omit the value keyword to source from user inputs. Mutually exclusive with the default keyword. ",
                     "pattern": "([^\\$])"
                 },
                 "type": {
@@ -386,17 +362,24 @@
                         },
                         {
                             "type": "object"
-                        },
-                        {
-                            "type": "null"
                         }
-                    ]
+                    ],
+                    "description": "If specified, contains a default value to be used if no input is passed. Mutually exclusive with the value keyword. "
                 }
             },
             "additionalProperties": false,
             "type": "object",
             "required": [
-                "name"
+                "name",
+                "type"
+            ],
+            "anyOf": [
+                {
+                  "not": {
+                    "type": "object",
+                    "required": ["value","default"]
+                  }   
+                }
             ]
         },
         "Module": {
@@ -418,8 +401,11 @@
                     "description": "Source repository definition for automation module. Followed by 'source_type'"
                 },
                 "tags": {
-                    "type": "string",
-                    "description": "User tags to be applied to resources provisioned by the module"
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array",
+                    "description": "User tags to be attached to resources provisioned by the module. An array of comma separated strings"
                 },
                 "injectors": {
                     "items": {
