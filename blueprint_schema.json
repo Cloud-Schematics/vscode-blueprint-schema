@@ -75,6 +75,8 @@
                 "source_type": {
                     "enum": [
                         "git",
+                        "github",
+                        "gitlab",
                         "catalog"
                     ],
                     "description": "Source library, one of catalog or git. Followed by 'git' or 'catalog' key fields. \n Follow with the git keyword for Git repos that require a git_url. \n Follow with catalog keyword to define catalog specification. "
