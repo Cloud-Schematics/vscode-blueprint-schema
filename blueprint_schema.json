@@ -120,6 +120,10 @@
                 },
                 "offering_repo_url": {
                     "type": "string"
+                },
+                "offering_version_flavour_name": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
                 }
             },
             "additionalProperties": false,
