@@ -93,7 +93,8 @@
             "additionalProperties": false,
             "required": [
                 "source_type"
-            ]
+            ],
+            "type": "object"
         },
         "Catalog": {
             "properties": {
@@ -162,6 +163,30 @@
                     "pattern": "^([$]((module[\\.])[A-Za-z\\d_\\-<>]+([\\.]outputs[\\.])[A-Za-z\\d_\\-<>]+$|(blueprint[\\.]).[A-Za-z\\d_\\-<>]+$)|([^\\$]))",
                     "description": "Input value, sourced from the template inputs as $blueprint.<input_name>, another module as $module.<module_name>.outputs.<output_name>, or a specified value in HCL format."
                 },
+                "default": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        },
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "pattern": "^([$]((module[\\.])[A-Za-z\\d_\\-<>]+([\\.]outputs[\\.])[A-Za-z\\d_\\-<>]+$|(blueprint[\\.]).[A-Za-z\\d_\\-<>]+$)|([^\\$]))",
+                    "description": "Default input value, replaces empty value above"
+                },
                 "type": {
                     "type": "string",
                     "pattern": "^(string)|(number)|(bool)|(list)|(map)|(object)",
@@ -172,7 +197,10 @@
                 },
                 "sensitive": {
                     "type": "boolean"
-                }
+                },
+                "required": {
+                    "type": "boolean"
+                }   
             },
             "additionalProperties": false,
             "type": "object",
