@@ -1,6 +1,5 @@
 name: blueprints-complex-inputs
-# yaml-language-server: $schema=/Users/stevestrutt/Documents/github/schematics-solution/vscode-blueprint-schema/blueprint_schema.json
-## yaml-language-server: $schema=../blueprint_schema.json
+# yaml-language-server: $schema=../blueprint_schema.json
 type: blueprint
 schema_version: "1.0.0"
 description: "Sample blueprint to demonstrate passing of complex Terraform variables"
